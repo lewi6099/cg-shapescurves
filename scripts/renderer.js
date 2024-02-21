@@ -52,11 +52,12 @@ class Renderer {
         // TODO: draw at least 2 Bezier curves
         //   - variable `this.num_curve_sections` should be used for `num_edges`
         //   - variable `this.show_points` should be used to determine whether or not to render vertices
-        
-        
+        this.drawBezierCurve({x: 100, y: 100}, {x: 100, y: 400}, {x: 700, y: 400}, {x: 700, y: 100}, this.num_curve_sections, [255, 0, 0, 255], framebuffer);
+        this.drawBezierCurve({x: 100, y: 500}, {x: 100, y: 400}, {x: 700, y: 400}, {x: 700, y: 500}, this.num_curve_sections, [255, 0, 0, 255], framebuffer);
+
         // Following line is example of drawing a single line
         // (this should be removed after you implement the curve)
-        this.drawLine({x: 100, y: 100}, {x: 600, y: 300}, [255, 0, 0, 255], framebuffer);
+        //this.drawLine({x: 100, y: 100}, {x: 600, y: 300}, [255, 0, 0, 255], framebuffer);
     }
 
     // framebuffer:  canvas ctx image data
@@ -100,8 +101,23 @@ class Renderer {
     // framebuffer:  canvas ctx image data
     drawBezierCurve(p0, p1, p2, p3, num_edges, color, framebuffer) {
         // TODO: draw a sequence of straight lines to approximate a Bezier curve
-        
-        
+        function calcCord(p0, p1, p2, p3, t){
+            return ((1 - t) ** 3) * p0 + 3 * ((1 - t) ** 2) * t * p1 + 3 * (1 - t) * (t ** 2) * p2 + (t ** 3) * p3;
+        }
+
+        let increase = 1.0 / num_edges;
+        for (let i = 0; i < num_edges; i++){
+            let x1 = calcCord(p0.x, p1.x, p2.x, p3.x, i * increase);
+            let y1 = calcCord(p0.y, p1.y, p2.y, p3.y, i * increase);
+            let x2 = calcCord(p0.x, p1.x, p2.x, p3.x, (i + 1) * increase);
+            let y2 = calcCord(p0.y, p1.y, p2.y, p3.y, (i + 1) * increase);
+            x1 = Math.round(x1);
+            x2 = Math.round(x2);
+            y1 = Math.round(y1);
+            y2 = Math.round(y2);
+            this.drawLine({x: x1, y: y1}, {x: x2, y: y2}, color, framebuffer);
+            console.log(i);
+        }
     }
 
     // center:       object {x: __, y: __}
