@@ -53,7 +53,7 @@ class Renderer {
         //   - variable `this.num_curve_sections` should be used for `num_edges`
         //   - variable `this.show_points` should be used to determine whether or not to render vertices
         this.drawBezierCurve({x: 100, y: 100}, {x: 100, y: 400}, {x: 700, y: 400}, {x: 700, y: 100}, this.num_curve_sections, [255, 0, 0, 255], framebuffer);
-        this.drawBezierCurve({x: 100, y: 500}, {x: 100, y: 400}, {x: 700, y: 400}, {x: 700, y: 500}, this.num_curve_sections, [255, 0, 0, 255], framebuffer);
+        this.drawBezierCurve({x: 100, y: 500}, {x: 150, y: 350}, {x: 650, y: 350}, {x: 700, y: 500}, this.num_curve_sections, [255, 0, 0, 255], framebuffer);
 
         // Following line is example of drawing a single line
         // (this should be removed after you implement the curve)
@@ -100,6 +100,7 @@ class Renderer {
         //   - variable `this.show_points` should be used to determine whether or not to render vertices
 
         // J
+        console.log(this.show_points);
         this.drawCircle({x: 150, y: 500}, 20, this.num_curve_sections, [0, 128, 128, 255], framebuffer);
         
         
@@ -118,6 +119,11 @@ class Renderer {
             return ((1 - t) ** 3) * p0 + 3 * ((1 - t) ** 2) * t * p1 + 3 * (1 - t) * (t ** 2) * p2 + (t ** 3) * p3;
         }
 
+        // Draw vertex for control points
+        this.drawVertex(p1, [0, 255, 0, 255], framebuffer);
+        this.drawVertex(p2, [0, 255, 0, 255], framebuffer);
+
+        // Draw Bezier curve
         let increase = 1.0 / num_edges;
         for (let i = 0; i < num_edges; i++){
             let x1 = calcCord(p0.x, p1.x, p2.x, p3.x, i * increase);
@@ -129,7 +135,10 @@ class Renderer {
             y1 = Math.round(y1);
             y2 = Math.round(y2);
             this.drawLine({x: x1, y: y1}, {x: x2, y: y2}, color, framebuffer);
-            console.log(i);
+            this.drawVertex({x: x1, y: y1}, [0, 0, 0, 255], framebuffer);
+            if (i == num_edges - 1) {
+                this.drawVertex({x: x2, y: y2}, [0, 0, 0, 255], framebuffer);
+            }
         }
     }
 
@@ -157,7 +166,10 @@ class Renderer {
             y1 = Math.round(y1);
             y2 = Math.round(y2);
             this.drawLine({x: x1, y: y1}, {x: x2, y: y2}, color, framebuffer);
-            console.log(i);
+            this.drawVertex({x: x1, y: y1}, [0, 0, 0, 255], framebuffer);
+            if (i == num_edges - 1) {
+                this.drawVertex({x: x2, y: y2}, [0, 0, 0, 255], framebuffer);
+            }
         }
     }
     
@@ -165,10 +177,11 @@ class Renderer {
     // color:        array of int [R, G, B, A]
     // framebuffer:  canvas ctx image data
     drawConvexPolygon(vertex_list, color, framebuffer) {
-        // TODO: draw a sequence of triangles to form a convex polygon
-        //this.drawTriangle(p0, p1, p2, color, framebuffer);
         for (let i = 0; i < vertex_list.length - 2; i++){
             this.drawTriangle(vertex_list[0], vertex_list[i + 1], vertex_list[i + 2], color, framebuffer);
+            this.drawVertex(vertex_list[0], [0, 0, 0, 255], framebuffer);
+            this.drawVertex(vertex_list[i + 1], [0, 0, 0, 255], framebuffer);
+            this.drawVertex(vertex_list[i + 2], [0, 0, 0, 255], framebuffer);
         }
     }
     
@@ -176,9 +189,30 @@ class Renderer {
     // color:        array of int [R, G, B, A]
     // framebuffer:  canvas ctx image data
     drawVertex(v, color, framebuffer) {
-        // TODO: draw some symbol (e.g. small rectangle, two lines forming an X, ...) centered at position `v`
-        //this.drawCircle(v);
-        
+        // Copy of circle argorithm without the feature of adding vertex
+        if (!this.show_points) {
+            return;
+        }
+        let radius = 5;
+        let num_sides = 36;
+        function calcCordX(radians){
+            return v.x + radius * Math.cos(radians);
+        }
+        function calcCordY(radians){
+            return v.y + radius * Math.sin(radians);
+        }
+        let increase = 2 * Math.PI / num_sides;
+        for (let i = 0; i < num_sides; i++){
+            let x1 = calcCordX(i * increase);
+            let y1 = calcCordY(i * increase);
+            let x2 = calcCordX((i + 1) * increase);
+            let y2 = calcCordY((i + 1) * increase);
+            x1 = Math.round(x1);
+            x2 = Math.round(x2);
+            y1 = Math.round(y1);
+            y2 = Math.round(y2);
+            this.drawLine({x: x1, y: y1}, {x: x2, y: y2}, color, framebuffer);
+        }
     }
     
     /***************************************************************
