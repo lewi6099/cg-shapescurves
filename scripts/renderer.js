@@ -100,9 +100,21 @@ class Renderer {
         //   - variable `this.show_points` should be used to determine whether or not to render vertices
 
         // J
-        console.log(this.show_points);
-        this.drawCircle({x: 150, y: 500}, 20, this.num_curve_sections, [0, 128, 128, 255], framebuffer);
-        
+        this.drawLine({x: 100, y: 500}, {x: 200, y: 500}, [0, 128, 128, 255], framebuffer);
+        this.drawLine({x: 150, y: 500}, {x: 150, y: 250}, [0, 128, 128, 255], framebuffer);
+        this.drawBezierCurve({x: 150, y: 250}, {x: 150, y: 150}, {x: 75, y: 150}, {x: 75, y: 200}, this.num_curve_sections, [0, 128, 128, 255], framebuffer);
+
+        // A
+        this.drawCircle({x: 300, y: 300}, 100, this.num_curve_sections, [0, 128, 128, 255], framebuffer);
+        this.drawBezierCurve({x: 400, y: 300}, {x: 400, y: 150}, {x: 450, y: 150}, {x: 475, y: 200}, this.num_curve_sections, [0, 128, 128, 255], framebuffer);
+
+        // C
+        this.drawConvexPolygon([{x: 600, y: 150}, {x: 600, y: 450}, {x: 575, y: 429}, {x: 540, y: 387}, {x: 500, y: 325}, {x: 500, y: 275}, {x: 540, y: 213}, {x: 575, y: 171}], [0, 128, 128, 255], framebuffer)
+
+        // K
+        this.drawLine({x: 650, y: 500}, {x: 650, y: 100}, [0, 128, 128, 255], framebuffer);
+        this.drawLine({x: 650, y: 350}, {x: 750, y: 450}, [0, 128, 128, 255], framebuffer);
+        this.drawLine({x: 650, y: 250}, {x: 750, y: 150}, [0, 128, 128, 255], framebuffer);
         
     }
 
