@@ -49,30 +49,19 @@ class Renderer {
 
     // framebuffer:  canvas ctx image data
     drawSlide0(framebuffer) {
-        // TODO: draw at least 2 Bezier curves
-        //   - variable `this.num_curve_sections` should be used for `num_edges`
-        //   - variable `this.show_points` should be used to determine whether or not to render vertices
         this.drawBezierCurve({x: 100, y: 100}, {x: 100, y: 400}, {x: 700, y: 400}, {x: 700, y: 100}, this.num_curve_sections, [255, 0, 0, 255], framebuffer);
         this.drawBezierCurve({x: 100, y: 500}, {x: 150, y: 350}, {x: 650, y: 350}, {x: 700, y: 500}, this.num_curve_sections, [255, 0, 0, 255], framebuffer);
-
-        // Following line is example of drawing a single line
-        // (this should be removed after you implement the curve)
-        //this.drawLine({x: 100, y: 100}, {x: 600, y: 300}, [255, 0, 0, 255], framebuffer);
     }
 
     // framebuffer:  canvas ctx image data
     drawSlide1(framebuffer) {
-        // TODO: draw at least 2 circles
-        //   - variable `this.num_curve_sections` should be used for `num_edges`
-        //   - variable `this.show_points` should be used to determine whether or not to render vertices
         this.drawCircle({x: 200, y: 300}, 150, this.num_curve_sections, [255, 0, 0, 255], framebuffer);
         this.drawCircle({x: 500, y: 400}, 100, this.num_curve_sections, [255, 0, 0, 255], framebuffer);
     }
 
     // framebuffer:  canvas ctx image data
     drawSlide2(framebuffer) {
-        // TODO: draw at least 2 convex polygons (each with a different number of vertices >= 5)
-        //   - variable `this.show_points` should be used to determine whether or not to render vertices
+        // Polygon 1
         let point_a, point_b, point_c, point_d, point_e, point_f, point_g, point_h;
         point_a = {x: 600, y: 100};
         point_b = {x: 700, y: 200};
@@ -82,6 +71,7 @@ class Renderer {
         point_f = {x: 400, y: 100};
         this.drawConvexPolygon([point_a, point_b, point_c, point_d, point_e, point_f], [0, 128, 128, 255], framebuffer);
 
+        // Polygon 2
         point_a = {x: 200, y: 175};
         point_b = {x: 350, y: 300};
         point_c = {x: 400, y: 400};
@@ -95,10 +85,6 @@ class Renderer {
 
     // framebuffer:  canvas ctx image data
     drawSlide3(framebuffer) {
-        // TODO: draw your name!
-        //   - variable `this.num_curve_sections` should be used for `num_edges`
-        //   - variable `this.show_points` should be used to determine whether or not to render vertices
-
         // J
         this.drawLine({x: 100, y: 500}, {x: 200, y: 500}, [0, 128, 128, 255], framebuffer);
         this.drawLine({x: 150, y: 500}, {x: 150, y: 250}, [0, 128, 128, 255], framebuffer);
@@ -126,7 +112,6 @@ class Renderer {
     // color:        array of int [R, G, B, A]
     // framebuffer:  canvas ctx image data
     drawBezierCurve(p0, p1, p2, p3, num_edges, color, framebuffer) {
-        // TODO: draw a sequence of straight lines to approximate a Bezier curve
         function calcCord(p0, p1, p2, p3, t){
             return ((1 - t) ** 3) * p0 + 3 * ((1 - t) ** 2) * t * p1 + 3 * (1 - t) * (t ** 2) * p2 + (t ** 3) * p3;
         }
@@ -160,7 +145,7 @@ class Renderer {
     // color:        array of int [R, G, B, A]
     // framebuffer:  canvas ctx image data
     drawCircle(center, radius, num_edges, color, framebuffer) {
-        // TODO: draw a sequence of straight lines to approximate a circle
+        // Funtction used to calculate x and y cords
         function calcCordX(radians){
             return center.x + radius * Math.cos(radians);
         }
@@ -201,7 +186,7 @@ class Renderer {
     // color:        array of int [R, G, B, A]
     // framebuffer:  canvas ctx image data
     drawVertex(v, color, framebuffer) {
-        // Copy of circle argorithm without the feature of adding vertex
+        // Copy of circle argorithm without the feature of adding vertex to prevent recursion
         if (!this.show_points) {
             return;
         }
